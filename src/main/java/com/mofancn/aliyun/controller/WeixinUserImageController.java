@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mofancn.aliyun.service.WeixinUserImageService;
 import com.mofancn.common.pojo.jedisClient;
 import com.mofancn.common.utils.HttpClientUtil;
+import com.mofancn.common.utils.JsonUtils;
 import com.mofancn.common.utils.MofancnResult;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -45,8 +46,10 @@ public class WeixinUserImageController {
 		if (doGet.length() <= 0) {
 			return MofancnResult.build(500, "获取accesstoken失败");
 		}
-		MofancnResult mofancnResult = MofancnResult.formatToPojo(doGet, MofancnResult.class);
-		if (mofancnResult.getStatus() == 200) {
+		System.out.println(doGet);
+		MofancnResult mofancnResult = JsonUtils.jsonToPojo(doGet, MofancnResult.class);
+		Integer status = mofancnResult.getStatus();
+		if (status == 200) {
 			String accessToken2 = mofancnResult.getData().toString();
 			return weixinUserImageService.uploadUserImageToAliOss(accessToken2, mediaId);
 		}
